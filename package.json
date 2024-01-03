@@ -1,0 +1,23 @@
+{
+  "name": "ocr_helper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build_ocr_cache": "ts-node build_ocr_cache.ts",
+    "build_parsed_article": "ts-node build_parsed_article.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "dommatrix": "^1.0.3",
+    "fs-extra": "^11.2.0",
+    "image-size": "^1.1.0",
+    "pdf.js": "^0.1.0",
+    "pdfjs-dist": "^4.0.379",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}
