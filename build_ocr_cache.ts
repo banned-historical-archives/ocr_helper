@@ -118,6 +118,7 @@ export async function do_ocr(
   for (const article of parser_opt.articles!) {
     const parts: PartRaw[] = [];
     for (let i = article.page_start; i <= article.page_end; ++i) {
+      console.log(i + '/' + article.page_end);
       const merged_ocr_parameters: Partial<
         OCRParameter & OCRParameterAdvanced
       > = {
