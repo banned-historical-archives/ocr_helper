@@ -132,6 +132,7 @@ export async function do_ocr(
           ? {
               file_path: dirPathOrFilePath,
               page: i,
+              is_pdf: true,
               cache_path: 
                 join(ocr_cache_dir, path.parse(dirPathOrFilePath).name, `${i}.json`),
             params: merged_ocr_parameters,
