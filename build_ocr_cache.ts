@@ -18,7 +18,16 @@ import {
   Book,
 } from './types';
 
-const [_, __, ocr_config_dir, raw_dir, ocr_cache_dir] = process.argv;
+let [_, __, ocr_config_dir, raw_dir, ocr_cache_dir] = process.argv;
+if (!path.isAbsolute(ocr_cache_dir)) {
+  ocr_cache_dir = join(__dirname, ocr_cache_dir);
+}
+if (!path.isAbsolute(raw_dir)) {
+  raw_dir = join(__dirname, raw_dir);
+}
+if (!path.isAbsolute(ocr_config_dir)) {
+  ocr_config_dir = join(__dirname, ocr_config_dir);
+}
 
 type PartRaw = { page: number; x: number; merge_up?: boolean } & ContentPartRaw;
 function extract_parts(
