@@ -13,17 +13,16 @@ bcde/3.png
 abcd.ts
 bcde.ts
 
-## ocr_patch
-abc/abcd/1.ts
-abc/abcd/2.ts
-bcd/bcde/1.ts
-bcd/bcde/2.ts
-
 ## ocr_cache
-abc/abcd/1.json
-abc/abcd/2.json
-bcd/bcde/1.json
-bcd/bcde/2.json
+abcd/1.json
+abcd/2.json
+bcde/1.json
+bcde/2.json
+
+## ocr_patch
+${prefix_of_article_id}/article_id_x.json
+${prefix_of_article_id}/article_id_y.json
+${prefix_of_article_id}/article_id_z.json
 
 ## parsed_article
 ${prefix_of_article_id}/article_id_x.json

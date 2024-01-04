@@ -91,15 +91,33 @@ function merge_parts(parts: PartRaw[]): ContentPart[] {
   return res;
 }
 
-export async function parse(
+export async function parse_article(
   ocr_cache_path: string,
   parser_opt: ParserOption,
 ): Promise<ParserResult[]> {
   const res: ParserResult[] = [];
+  parser_opt.ocr = {
+
+    content_thresholds: [0.0, 0.0, 0.0, 0.0],
+    line_merge_threshold: 30,
+    standard_paragraph_merge_strategy_threshold: 0,
+    differential_paragraph_merge_strategy_threshold: 30,
+    auto_vsplit: true,
+    vsplit: 0.5,
+    ...parser_opt.ocr,
+  };
   for (const article of parser_opt.articles!) {
     const parts: PartRaw[] = [];
     for (let i = article.page_start; i <= article.page_end; ++i) {
 
+      const merged_ocr_parameters: Partial<
+        OCRParameter & OCRParameterAdvanced
+      > = {
+        ...(parser_opt.ocr || {}),
+        ...(article.ocr ? article.ocr : {}),
+        ...(article.ocr_exceptions ? article.ocr_exceptions[i] : {}),
+        ...(parser_opt.ocr_exceptions ? parser_opt.ocr_exceptions[i] : {}),
+      };
       let { ocr_results, dimensions } = JSON.parse((await fs.readFile(join(ocr_cache_path, `${i}.json`))).toString()) as OCRCacheFile;
 
       const content_thresholds = merged_ocr_parameters.content_thresholds!;
@@ -201,8 +219,8 @@ export async function parse(
     const uuid = path.parse(cfg.path).name;
     const ocr_cache_path = join(ocr_cache_dir, uuid.slice(0, 3), uuid);
 
-    const res = await parse(ocr_cache_path, cfg.parser_option);
-    const target_dir = join(ocr_cache_dir, uuid.slice(0, 3))
+    const res = await parse_article(ocr_cache_path, cfg.parser_option);
+    const target_dir = join(parsed_article_dir, uuid.slice(0, 3))
     await fs.writeFile(join(target_dir, `${uuid}.json`), JSON.stringify(res));
   }
 })();

@@ -104,12 +104,6 @@ export async function do_ocr(
     det_limit_side_len: 2496,
     drop_score: 0.3,
 
-    content_thresholds: [0.0, 0.0, 0.0, 0.0],
-    line_merge_threshold: 30,
-    standard_paragraph_merge_strategy_threshold: 0,
-    differential_paragraph_merge_strategy_threshold: 30,
-    auto_vsplit: true,
-    vsplit: 0.5,
     ...parser_opt.ocr,
   };
   for (const article of parser_opt.articles!) {
@@ -126,16 +120,19 @@ export async function do_ocr(
       await ocr(
         parser_opt.type == 'pdf'
           ? {
-              pdf: dirPathOrFilePath,
+              file_path: dirPathOrFilePath,
               page: i,
               cache_path: 
                 join(ocr_cache_dir, path.parse(dirPathOrFilePath).name, `${i}.json`),
             params: merged_ocr_parameters,
           }
           : {
-            img: pathExistsSync(join(dirPathOrFilePath, `${i}.jpg`)) ? join(dirPathOrFilePath, `${i}.jpg`) : join(dirPathOrFilePath, `${i}.png`),
+            file_path: pathExistsSync(join(dirPathOrFilePath, `${i}.jpg`)) ? join(dirPathOrFilePath, `${i}.jpg`) : join(dirPathOrFilePath, `${i}.png`),
+            cache_path: 
+                join(ocr_cache_dir, path.parse(dirPathOrFilePath).name, `${i}.json`),
+            page: i,
               params: merged_ocr_parameters,
-            },
+          },
       );
     }
   }
@@ -150,7 +147,5 @@ export async function do_ocr(
   for (const cfg of cfgs) {
     const uuid = path.parse(cfg.path).name;
     const res = await do_ocr(join(raw_dir, basename(cfg.path)), cfg.parser_option);
-    const target_dir = join(ocr_cache_dir, uuid.slice(0, 3))
-    await fs.writeFile(join(target_dir, `${uuid}.json`), JSON.stringify(res));
   }
 })();

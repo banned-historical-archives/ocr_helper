@@ -15,52 +15,37 @@ import { tmpdir } from 'node:os';
 import { merge_to_lines, pdfjsContentToOCRResult } from './utils';
 
 export default async function ocr({
-  img,
+  file_path,
   cache = true,
-  pdf,
+  is_pdf,
   page,
   cache_path,
   params,
 }: {
   cache?: boolean;
   cache_path?: string;
-  img?: string;
-  pdf?: string;
+  file_path: string;
+  is_pdf?: boolean;
   page?: number; // start from 1
   params: Partial<OCRParameter & OCRParameterAdvanced>;
 }): Promise<{
   ocr_results: OCRResult[];
   dimensions: { height: number; width: number };
 }> {
-  const target = pdf || img!;
-  const abs_target_path = isAbsolute(target)
-    ? target
-    : join(__dirname, `../../main/${target}`);
-
-  const last_dirname = dirname(target).split('/').slice(-1);
-  cache_path = cache_path
-    ? cache_path!
-    : (join(
-        __dirname,
-        `../../ocr_cache/${last_dirname}/${basename(target).replace(
-          /[^\d]/g,
-          '',
-        )}.json`,
-      ) as string);
   if (cache && (await fs.pathExists(cache_path!))) {
-    return JSON.parse((await fs.readFile(cache_path)).toString());
+    return JSON.parse((await fs.readFile(cache_path!)).toString());
   }
-  if (!(await fs.pathExists(dirname(cache_path)))) {
-    await fs.ensureDir(dirname(cache_path));
+  if (!(await fs.pathExists(dirname(cache_path!)))) {
+    await fs.ensureDir(dirname(cache_path!));
   }
   let res: {
     ocr_results: OCRResult[];
     dimensions: { height: number; width: number };
   };
 
-  if (pdf && params.extract_text_from_pdf) {
+  if (is_pdf && params.extract_text_from_pdf) {
     const doc = await pdfjsLib.getDocument({
-      url: pdf,
+      url: file_path,
       cMapPacked: true,
       cMapUrl: './node_modules/pdfjs-dist/cmaps/',
     }).promise;
@@ -77,25 +62,15 @@ export default async function ocr({
       ),
     };
   } else {
-    const abs_ocr_target = pdf
-      ? await pdf2image({ pdf_path: abs_target_path, page: page! - 1 })
-      : abs_target_path;
+    const abs_ocr_target = is_pdf
+      ? await pdf2image({ pdf_path: file_path, page: page! - 1 })
+      : file_path;
     const dimensions = sizeOf(abs_ocr_target);
 
     const tmp_file = join(tmpdir(), Math.random().toString());
     await fs.writeFile(
       tmp_file,
       JSON.stringify({
-        det_db_box_thresh: 0.2,
-        // 'use_gpu': true,
-        // 'gpu_mem': 7000,
-        rec_char_dict_path: './paddle/ppocr_keys_v1.txt',
-        rec_model_dir: './paddle/ch_PP-OCRv4_rec_infer',
-        det_model_dir: './paddle/ch_PP-OCRv4_det_infer',
-
-        det_limit_side_len: 2496,
-        drop_score: 0.3,
-
         ...params,
         image_dir: abs_ocr_target,
       }),
@@ -119,7 +94,7 @@ export default async function ocr({
         width: dimensions.width!,
       },
     };
-    pdf && (await fs.remove(abs_ocr_target));
+    is_pdf && (await fs.remove(abs_ocr_target));
   }
   await fs.writeFile(cache_path!, JSON.stringify(res));
 
