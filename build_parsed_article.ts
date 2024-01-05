@@ -441,8 +441,8 @@ export function apply_patch(parserResult: ParserResult, patch: Patch) {
           }
         }
       }
-      await fs.ensureDir(join(parsed_article_dir, `${id.slice(0, 3)}`))
-      await fs.writeFile(join(parsed_article_dir, `${id.slice(0, 3)}`, `${id}.json`), JSON.stringify(article));
+      await fs.ensureDir(join(parsed_article_dir, uuid.slice(0, 3), uuid))
+      await fs.writeFile(join(parsed_article_dir, uuid.slice(0, 3), uuid, `${id}.json`), JSON.stringify(article));
     }
   }
 })();
