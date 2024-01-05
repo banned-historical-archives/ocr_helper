@@ -22,9 +22,11 @@ import { get_tags } from './get_tags';
 let [_, __, parsed_article_dir, tags_dir] = process.argv;
 
 (async () => {
-  const f1_list = (await fs.readdir(parsed_article_dir)).filter(i => !i.startsWith('.') && fs.statSync(i).isDirectory)
+  const f1_list = (await fs.readdir(parsed_article_dir)).filter(i => !i.startsWith('.') && fs.statSync(
+    join(parsed_article_dir, i)
+    ).isDirectory)
   for (const f1 of f1_list) {
-    const book_list = (await fs.readdir(join(parsed_article_dir, f1))).filter(i => fs.statSync(i).isDirectory)
+    const book_list = await fs.readdir(join(parsed_article_dir, f1))
     let i = 0;
     for (const book of book_list) {
       ++i;
