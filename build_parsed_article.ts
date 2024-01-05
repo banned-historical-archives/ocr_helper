@@ -443,7 +443,6 @@ export function apply_patch(parserResult: ParserResult, patch: Patch) {
         }
       }
 
-      article.tags = get_tags(article);
       await fs.ensureDir(join(parsed_article_dir, uuid.slice(0, 3), uuid))
       await fs.writeFile(join(parsed_article_dir, uuid.slice(0, 3), uuid, `${id}.json`), JSON.stringify(article));
     }

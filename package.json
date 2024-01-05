@@ -6,6 +6,7 @@
   "scripts": {
     "build_ocr_cache": "ts-node build_ocr_cache.ts",
     "build_parsed_article": "ts-node build_parsed_article.ts",
+    "build_tag": "ts-node build_tag.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
