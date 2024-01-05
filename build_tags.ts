@@ -34,8 +34,9 @@ let [_, __, parsed_article_dir, tags_dir] = process.argv;
       const article_list = (await fs.readdir(join(parsed_article_dir, f1, book)));
       for (const article of article_list) {
         const data = JSON.parse(fs.readFileSync(join(parsed_article_dir, f1, book, article)).toString()) as ParserResult;
-        const target = join(tags_dir, f1, book, article);
-        fs.writeFileSync(target, JSON.stringify(get_tags(data)));
+        const target_dir = join(tags_dir, f1, book);
+        fs.ensureDirSync(target_dir);
+        fs.writeFileSync(join(target_dir, article), JSON.stringify(get_tags(data)));
       }
     }
   }
