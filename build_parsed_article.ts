@@ -23,6 +23,7 @@ import {
 } from './types';
 import { get_article_id, merge_to_lines, pdfjsContentToOCRResult } from './utils';
 import { traditionalChineseToSimpleChinese } from './i18n';
+import { get_tags } from './get_tags';
 
 const [_, __, ocr_config_dir, ocr_cache_dir, ocr_patch_dir, parsed_article_dir] = process.argv;
 
@@ -441,6 +442,8 @@ export function apply_patch(parserResult: ParserResult, patch: Patch) {
           }
         }
       }
+
+      article.tags = get_tags(article);
       await fs.ensureDir(join(parsed_article_dir, uuid.slice(0, 3), uuid))
       await fs.writeFile(join(parsed_article_dir, uuid.slice(0, 3), uuid, `${id}.json`), JSON.stringify(article));
     }
