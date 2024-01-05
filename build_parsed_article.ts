@@ -411,10 +411,13 @@ export function apply_patch(parserResult: ParserResult, patch: Patch) {
 
   for (const cfg of cfgs) {
     const uuid = path.parse(cfg.path).name;
+    console.log('book id', uuid);
     const ocr_cache_path = join(ocr_cache_dir, uuid);
 
     const res = await parse_article(ocr_cache_path, cfg.parser_option);
     for (let article of res) {
+      const id = get_article_id(article);
+      console.log('article id', id);
       article.alias = traditionalChineseToSimpleChinese(article.alias || '');
       article.description = traditionalChineseToSimpleChinese(article.description || '');
       article.parts.forEach(j => {
@@ -426,9 +429,9 @@ export function apply_patch(parserResult: ParserResult, patch: Patch) {
         );
       }
 
-      const id = get_article_id(article);
       const patch_path = join(ocr_patch_dir, `[${id}][${uuid}].ts`);
       if (await fs.pathExists(patch_path)) {
+        console.log('found patch', patch_path);
         const patch_list = (await import(patch_path)).default;
         for (const patch of patch_list) {
           if (patch.version === 2) {
