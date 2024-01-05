@@ -20,11 +20,13 @@ bcde/1.json
 bcde/2.json
 
 ## ocr_patch
-${prefix_of_article_id}/article_id_x.json
-${prefix_of_article_id}/article_id_y.json
-${prefix_of_article_id}/article_id_z.json
+[article_id_x][book_idx].json
+[article_id_y][book_idx].json
+[article_id_z][book_idy].json
+[article_id_z][book_idz].json
 
 ## parsed_article
-${prefix_of_article_id}/article_id_x.json
-${prefix_of_article_id}/article_id_y.json
-${prefix_of_article_id}/article_id_z.json
+[article_id_x][book_idx].json
+[article_id_y][book_idx].json
+[article_id_z][book_idy].json
+[article_id_z][book_idz].json
