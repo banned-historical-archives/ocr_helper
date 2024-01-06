@@ -29,7 +29,7 @@ let [_, __, parsed_article_dir, tags_dir] = process.argv;
     for (const book of book_list) {
       ++i;
       console.log(book, `${i}/${book_list.length}`);
-      const article_list = (await fs.readdir(join(parsed_article_dir, f1, book)));
+      const article_list = (await fs.readdir(join(parsed_article_dir, f1, book))).filter(i => !i.endsWith('.bookinfo'));
       for (const article of article_list) {
         const data = JSON.parse(fs.readFileSync(join(parsed_article_dir, f1, book, article)).toString()) as ParserResult;
         const target_dir = join(tags_dir, f1, book);

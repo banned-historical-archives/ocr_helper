@@ -28,7 +28,8 @@ bcde/2.json
 [article_id_z][book_idz].json
 
 ## parsed_article
-prefix/book_id/article_id.json
+prefix/book_id/prefix/article_id.json
+prefix/book_id/book_id.bookinfo
 
 ## tags
-prefix/book_id/article_id.json
+prefix/book_id/prefix/article_id.json
