@@ -240,9 +240,9 @@ export function apply_patch(parserResult: ParserResult, patch: Patch) {
   )).map(i => i.default);
 
   for (const cfg of cfgs) {
-    const uuid = cfg.entity.id;
-    console.log('book id', uuid);
-    const ocr_cache_path = join(ocr_cache_dir, uuid);
+    const book_id = cfg.entity.id;
+    console.log('book id', book_id);
+    const ocr_cache_path = join(ocr_cache_dir, book_id);
 
     let res: ParserResult[] = [];
     if (cfg.parser_id === 'automation') {
@@ -281,8 +281,7 @@ export function apply_patch(parserResult: ParserResult, patch: Patch) {
       res = await zzj1(join(raw_dir, cfg.path), cfg.parser_option);
     }
     for (let article of res) {
-      const id = get_article_id(article);
-      console.log('article id', id);
+      const article_id = get_article_id(article);
       article.alias = traditionalChineseToSimpleChinese(article.alias || '');
       article.description = traditionalChineseToSimpleChinese(article.description || '');
       article.parts.forEach(j => {
@@ -294,7 +293,7 @@ export function apply_patch(parserResult: ParserResult, patch: Patch) {
         );
       }
 
-      const patch_path = join(ocr_patch_dir, `[${id}][${uuid}].ts`);
+      const patch_path = join(ocr_patch_dir, `[${article_id}][${book_id}].ts`);
       if (await fs.pathExists(patch_path)) {
         console.log('found patch', patch_path);
         const patch_list = (await import(patch_path)).default;
@@ -307,8 +306,11 @@ export function apply_patch(parserResult: ParserResult, patch: Patch) {
         }
       }
 
-      await fs.ensureDir(join(parsed_article_dir, uuid.slice(0, 3), uuid))
-      await fs.writeFile(join(parsed_article_dir, uuid.slice(0, 3), uuid, `${id}.json`), JSON.stringify(article));
+      await fs.ensureDir(join(parsed_article_dir, book_id.slice(0, 3), book_id, article_id.slice(0, 3)));
+      await fs.writeFile(join(parsed_article_dir, book_id.slice(0, 3), book_id, article_id.slice(0, 3), `${article_id}.json`), JSON.stringify(article));
+      await fs.writeFile(join(parsed_article_dir, book_id.slice(0, 3), book_id, `${book_id}.bookinfo`), JSON.stringify(
+        cfg.entity
+      ));
     }
   }
 })();
