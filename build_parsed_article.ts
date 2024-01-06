@@ -240,7 +240,7 @@ export function apply_patch(parserResult: ParserResult, patch: Patch) {
   )).map(i => i.default);
 
   for (const cfg of cfgs) {
-    const uuid = path.parse(cfg.path).name;
+    const uuid = cfg.entity.id;
     console.log('book id', uuid);
     const ocr_cache_path = join(ocr_cache_dir, uuid);
 
