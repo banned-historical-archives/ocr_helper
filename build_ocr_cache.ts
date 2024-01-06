@@ -101,6 +101,7 @@ function merge_parts(parts: PartRaw[]): ContentPart[] {
 export async function do_ocr(
   dirPathOrFilePath: string,
   parser_opt: ParserOption,
+  entity_type: string,
 ) {
   parser_opt.ocr = {
     det_db_box_thresh: 0.2,
@@ -128,7 +129,7 @@ export async function do_ocr(
         ...(parser_opt.ocr_exceptions ? parser_opt.ocr_exceptions[i] : {}),
       };
       await ocr(
-        parser_opt.type == 'pdf'
+        entity_type == 'pdf'
           ? {
               file_path: dirPathOrFilePath,
               page: i,
@@ -159,7 +160,10 @@ export async function do_ocr(
   for (const cfg of cfgs) {
     ++i;
     console.log(i + '/' + cfgs.length, cfg.path, cfg.parser_option.articles?.length);
-    const uuid = path.parse(cfg.path).name;
-    const res = await do_ocr(join(raw_dir, basename(cfg.path)), cfg.parser_option);
+
+    if (cfg.parser_id === 'automation') {
+      const uuid = path.parse(cfg.path).name;
+      const res = await do_ocr(join(raw_dir, basename(cfg.path)), cfg.parser_option, cfg.entity.type);
+    }
   }
 })();
