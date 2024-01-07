@@ -139,7 +139,12 @@ export async function do_ocr(
             params: merged_ocr_parameters,
           }
           : {
-            file_path: pathExistsSync(join(dirPathOrFilePath, `${i}.jpg`)) ? join(dirPathOrFilePath, `${i}.jpg`) : join(dirPathOrFilePath, `${i}.png`),
+            file_path:
+              pathExistsSync(join(dirPathOrFilePath, `${i}.jpg`)) ?
+                join(dirPathOrFilePath, `${i}.jpg`) :
+              pathExistsSync(join(dirPathOrFilePath, `${i}.jpeg`)) ?
+              join(dirPathOrFilePath, `${i}.jpeg`):
+                join(dirPathOrFilePath, `${i}.png`),
             cache_path: 
                 join(ocr_cache_dir, path.parse(dirPathOrFilePath).name, `${i}.json`),
             page: i,
