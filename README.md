@@ -2,8 +2,6 @@ npm run build_ocr_cache -- /var/ocr_config /var/raw_dir /var/ocr_cache
 
 npm run build_parsed_article -- /var/ocr_config /var/ocr_cache /var/ocr_patch /var/parsed_article /var/raw_dir
 
-npm run build_tags -- /var/parsed_article /var/tags
-
 ## raw_dir
 
 abcd.pdf
@@ -30,6 +28,3 @@ bcde/2.json
 ## parsed_article
 prefix/book_id/prefix/article_id.json
 prefix/book_id/book_id.bookinfo
-
-## tags
-prefix/book_id/prefix/article_id.json

@@ -308,6 +308,7 @@ export function apply_patch(parserResult: ParserResult, patch: Patch) {
 
       await fs.ensureDir(join(parsed_article_dir, book_id.slice(0, 3), book_id, article_id.slice(0, 3)));
       await fs.writeFile(join(parsed_article_dir, book_id.slice(0, 3), book_id, article_id.slice(0, 3), `${article_id}.json`), JSON.stringify(article));
+      await fs.writeFile(join(parsed_article_dir, book_id.slice(0, 3), book_id, article_id.slice(0, 3), `${article_id}.tag`), JSON.stringify(get_tags(article)));
       await fs.writeFile(join(parsed_article_dir, book_id.slice(0, 3), book_id, `${book_id}.bookinfo`), JSON.stringify(
         cfg.entity
       ));
