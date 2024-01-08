@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build_ocr_cache": "ts-node build_ocr_cache.ts",
-    "build_parsed_article": "ts-node build_parsed_article.ts",
+    "build_parsed": "ts-node build_parsed.ts",
     "build_tags": "ts-node build_tags.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
