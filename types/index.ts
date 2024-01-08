@@ -299,9 +299,14 @@ export type OCRParameterAdvanced = {
   vsplit: number; // 如果设置为0.5，ocr结果将从页面宽度的50%处分割，如果为0表示不分割。当auto_vsplit为false且vsplit不为0时，表示任何页面都进行分割。
 };
 
-export type Book = {
-  entity: Partial<any>;
-  path: string;
+export type CommonResource = {
+  resource_type: 'book' | 'music' | 'gallery',
+  entity: {
+    id: string,
+    name: string,
+    type: 'img' | 'pdf' | 'epub' | 'db',
+  };
+  path: string; // 相对子仓库路径
   parser_option: ParserOption;
   parser_id: string;
   parser: (path: string, opt: ParserOption) => Promise<ParserResult[]>;

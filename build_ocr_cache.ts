@@ -15,7 +15,7 @@ import {
   Pivot,
   TagType,
   OCRParameter,
-  Book,
+  CommonResource,
 } from './types';
 
 let [_, __, ocr_config_dir, raw_dir, ocr_cache_dir] = process.argv;
@@ -157,14 +157,14 @@ export async function do_ocr(
 
 (async () => {
   const f_list = (await fs.readdir(ocr_config_dir)).filter(i => i.endsWith('.ts'))
-  const cfgs = (await Promise.all<{default: Book}>(
+  const cfgs = (await Promise.all<{default: CommonResource}>(
     f_list.map((file) => import(join(ocr_config_dir, file))),
   )).map(i => i.default);
 
   let i = 0;
   for (const cfg of cfgs) {
     ++i;
-    console.log(i + '/' + cfgs.length, cfg.path, cfg.parser_option.articles?.length);
+    console.log(i + '/' + cfgs.length, cfg.path, cfg?.parser_option?.articles?.length);
 
     if (cfg.parser_id === 'automation') {
       const uuid = path.parse(cfg.path).name;

@@ -16,7 +16,7 @@ import {
   Pivot,
   TagType,
   OCRParameter,
-  Book,
+  CommonResource,
   OCRCacheFile,
   Patch,
   PatchV2,
@@ -41,7 +41,7 @@ import yaowenyuan from './parser/yaowenyuan';
 import zhangchunqiao from './parser/zhangchunqiao';
 import zzj1 from './parser/zzj1';
 
-const [_, __, ocr_config_dir, ocr_cache_dir, ocr_patch_dir, parsed_article_dir, raw_dir] = process.argv;
+const [_, __, config_dir, ocr_cache_dir, ocr_patch_dir, parsed_dir, raw_dir] = process.argv;
 
 export const bracket_left = '〔';
 export const bracket_right = '〕';
@@ -234,12 +234,25 @@ export function apply_patch(parserResult: ParserResult, patch: Patch) {
 }
 
 (async () => {
-  const f_list = (await fs.readdir(ocr_config_dir)).filter(i => i.endsWith('.ts'))
-  const cfgs = (await Promise.all<{default: Book}>(
-    f_list.map((file) => import(join(ocr_config_dir, file))),
+  const f_list = (await fs.readdir(config_dir)).filter(i => i.endsWith('.ts'))
+  const cfgs = (await Promise.all<{default: CommonResource}>(
+    f_list.map((file) => import(join(config_dir, file))),
   )).map(i => i.default);
 
   for (const cfg of cfgs) {
+    if (
+      !!cfg.resource_type &&
+      cfg.resource_type != 'book'
+    ) {
+      const id = cfg.entity.id;
+      await fs.ensureDir(join(parsed_dir, id.slice(0, 3), id));
+      if (cfg.resource_type == 'music') {
+        await fs.writeFileSync(join(parsed_dir, id.slice(0, 3), id, id + '.musicinfo'), JSON.stringify(cfg));
+      } else if (cfg.resource_type == 'gallery') {
+        await fs.writeFileSync(join(parsed_dir, id.slice(0, 3), id, id + '.galleryinfo'), JSON.stringify(cfg));
+      }
+      continue;
+    }
     const book_id = cfg.entity.id;
     console.log('book id', book_id);
     const ocr_cache_path = join(ocr_cache_dir, book_id);
@@ -306,10 +319,10 @@ export function apply_patch(parserResult: ParserResult, patch: Patch) {
         }
       }
 
-      await fs.ensureDir(join(parsed_article_dir, book_id.slice(0, 3), book_id, article_id.slice(0, 3)));
-      await fs.writeFile(join(parsed_article_dir, book_id.slice(0, 3), book_id, article_id.slice(0, 3), `${article_id}.json`), JSON.stringify(article));
-      await fs.writeFile(join(parsed_article_dir, book_id.slice(0, 3), book_id, article_id.slice(0, 3), `${article_id}.tag`), JSON.stringify(get_tags(article)));
-      await fs.writeFile(join(parsed_article_dir, book_id.slice(0, 3), book_id, `${book_id}.bookinfo`), JSON.stringify(
+      await fs.ensureDir(join(parsed_dir, book_id.slice(0, 3), book_id, article_id.slice(0, 3)));
+      await fs.writeFile(join(parsed_dir, book_id.slice(0, 3), book_id, article_id.slice(0, 3), `${article_id}.json`), JSON.stringify(article));
+      await fs.writeFile(join(parsed_dir, book_id.slice(0, 3), book_id, article_id.slice(0, 3), `${article_id}.tag`), JSON.stringify(get_tags(article)));
+      await fs.writeFile(join(parsed_dir, book_id.slice(0, 3), book_id, `${book_id}.bookinfo`), JSON.stringify(
         cfg.entity
       ));
     }
