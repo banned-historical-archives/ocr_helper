@@ -300,7 +300,7 @@ export type OCRParameterAdvanced = {
 };
 
 export type CommonResource = {
-  resource_type: 'book' | 'music' | 'gallery',
+  resource_type: 'book' | 'music' | 'picture' | 'video',
   entity: {
     id: string,
     name: string,

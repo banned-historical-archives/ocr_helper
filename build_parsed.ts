@@ -248,8 +248,10 @@ export function apply_patch(parserResult: ParserResult, patch: Patch) {
       await fs.ensureDir(join(parsed_dir, id.slice(0, 3), id));
       if (cfg.resource_type == 'music') {
         await fs.writeFileSync(join(parsed_dir, id.slice(0, 3), id, id + '.musicinfo'), JSON.stringify(cfg));
-      } else if (cfg.resource_type == 'gallery') {
-        await fs.writeFileSync(join(parsed_dir, id.slice(0, 3), id, id + '.galleryinfo'), JSON.stringify(cfg));
+      } else if (cfg.resource_type == 'picture') {
+        await fs.writeFileSync(join(parsed_dir, id.slice(0, 3), id, id + '.pictureinfo'), JSON.stringify(cfg));
+      } else if (cfg.resource_type == 'video') {
+        await fs.writeFileSync(join(parsed_dir, id.slice(0, 3), id, id + '.videoinfo'), JSON.stringify(cfg));
       }
       continue;
     }
