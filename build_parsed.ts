@@ -264,7 +264,9 @@ export function apply_patch(parserResult: ParserResult, patch: Patch) {
     if (cfg.parser_id === 'automation') {
       res = await automationParser(ocr_cache_path, cfg.parser_option);
     } else if (cfg.parser_id === 'result-json') {
-      res = await resultJson(join(raw_dir, cfg.path));
+      for (const f of await fs.readdir(join(raw_dir, cfg.path))) {
+        res.push(...await resultJson(join(raw_dir, cfg.path, f)));
+      }
     } else if (cfg.parser_id === 'CCRD') {
       res = await CCRD(join(raw_dir, cfg.path));
     } else if (cfg.parser_id === 'chuanxinlu') {
