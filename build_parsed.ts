@@ -40,6 +40,7 @@ import xuanji from './parser/xuanji';
 import yaowenyuan from './parser/yaowenyuan';
 import zhangchunqiao from './parser/zhangchunqiao';
 import zzj1 from './parser/zzj1';
+import resultJson from './parser/result-json';
 
 const [_, __, config_dir, ocr_cache_dir, ocr_patch_dir, parsed_dir, raw_dir] = process.argv;
 
@@ -262,6 +263,8 @@ export function apply_patch(parserResult: ParserResult, patch: Patch) {
     let res: ParserResult[] = [];
     if (cfg.parser_id === 'automation') {
       res = await automationParser(ocr_cache_path, cfg.parser_option);
+    } else if (cfg.parser_id === 'result-json') {
+      res = await resultJson(join(raw_dir, cfg.path));
     } else if (cfg.parser_id === 'CCRD') {
       res = await CCRD(join(raw_dir, cfg.path));
     } else if (cfg.parser_id === 'chuanxinlu') {
