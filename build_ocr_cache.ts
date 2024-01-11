@@ -167,7 +167,7 @@ export async function do_ocr(
     console.log(i + '/' + cfgs.length, cfg.path, cfg?.parser_option?.articles?.length);
 
     if (cfg.parser_id === 'automation') {
-      const uuid = path.parse(cfg.path).name;
+      const uuid = cfg.entity.id;
       const res = await do_ocr(join(raw_dir, basename(cfg.path)), cfg.parser_option, cfg.entity.type);
     }
   }
