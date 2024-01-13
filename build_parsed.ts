@@ -41,6 +41,7 @@ import yaowenyuan from './parser/yaowenyuan';
 import zhangchunqiao from './parser/zhangchunqiao';
 import zzj1 from './parser/zzj1';
 import resultJson from './parser/result-json';
+import maoistlegacyTxt from './parser/maoistlegacy-txt';
 
 const [_, __, config_dir, ocr_cache_dir, ocr_patch_dir, parsed_dir, raw_dir] = process.argv;
 
@@ -299,6 +300,8 @@ export function apply_patch(parserResult: ParserResult, patch: Patch) {
       res = await zhangchunqiao(join(raw_dir, cfg.path), cfg.parser_option);
     } else if (cfg.parser_id === 'zzj1') {
       res = await zzj1(join(raw_dir, cfg.path), cfg.parser_option);
+    } else if (cfg.parser_id === 'maoistlegacy-txt') {
+      res = await maoistlegacyTxt(join(raw_dir, cfg.path, 'meta.json'));
     }
     for (let article of res) {
       const article_id = get_article_id(article);
