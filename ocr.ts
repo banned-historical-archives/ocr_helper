@@ -35,7 +35,6 @@ export default async function ocr({
   if (cache && (await fs.pathExists(cache_path!))) {
     return JSON.parse((await fs.readFile(cache_path!)).toString());
   }
-  console.log('ocr:', file_path, page, is_pdf);
   if (!(await fs.pathExists(dirname(cache_path!)))) {
     await fs.ensureDir(dirname(cache_path!));
   }
