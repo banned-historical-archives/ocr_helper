@@ -102,6 +102,7 @@ export async function do_ocr(
   dirPathOrFilePath: string,
   parser_opt: ParserOption,
   entity_type: string,
+  entity_id: string,
 ) {
   parser_opt.ocr = {
     det_db_box_thresh: 0.2,
@@ -135,7 +136,7 @@ export async function do_ocr(
               page: i,
               is_pdf: true,
               cache_path: 
-                join(ocr_cache_dir, path.parse(dirPathOrFilePath).name, `${i}.json`),
+                join(ocr_cache_dir, entity_id, `${i}.json`),
             params: merged_ocr_parameters,
           }
           : {
@@ -167,7 +168,7 @@ export async function do_ocr(
     console.log(i + '/' + cfgs.length, cfg.path, cfg?.parser_option?.articles?.length);
 
     if (cfg.parser_id === 'automation') {
-      const res = await do_ocr(join(raw_dir, basename(cfg.path)), cfg.parser_option, cfg.entity.type);
+      const res = await do_ocr(join(raw_dir, basename(cfg.path)), cfg.parser_option, cfg.entity.type, cfg.entity.id);
     }
   }
 })();
