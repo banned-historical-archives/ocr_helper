@@ -147,7 +147,7 @@ export async function do_ocr(
               join(dirPathOrFilePath, `${i}.jpeg`):
                 join(dirPathOrFilePath, `${i}.png`),
             cache_path: 
-                join(ocr_cache_dir, path.parse(dirPathOrFilePath).name, `${i}.json`),
+                join(ocr_cache_dir, entity_id, `${i}.json`),
             page: i,
               params: merged_ocr_parameters,
           },
