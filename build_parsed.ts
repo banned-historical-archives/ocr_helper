@@ -249,11 +249,11 @@ export function apply_patch(parserResult: ParserResult, patch: Patch) {
       const id = cfg.entity.id;
       await fs.ensureDir(join(parsed_dir, id.slice(0, 3), id));
       if (cfg.resource_type == 'music') {
-        await fs.writeFileSync(join(parsed_dir, id.slice(0, 3), id, id + '.musicinfo'), JSON.stringify(cfg));
+        await fs.writeFileSync(join(parsed_dir, id.slice(0, 3), id, id + '.musicinfo'), JSON.stringify(cfg.metadata));
       } else if (cfg.resource_type == 'picture') {
-        await fs.writeFileSync(join(parsed_dir, id.slice(0, 3), id, id + '.pictureinfo'), JSON.stringify(cfg));
+        await fs.writeFileSync(join(parsed_dir, id.slice(0, 3), id, id + '.pictureinfo'), JSON.stringify(cfg.metadata));
       } else if (cfg.resource_type == 'video') {
-        await fs.writeFileSync(join(parsed_dir, id.slice(0, 3), id, id + '.videoinfo'), JSON.stringify(cfg));
+        await fs.writeFileSync(join(parsed_dir, id.slice(0, 3), id, id + '.videoinfo'), JSON.stringify(cfg.metadata));
       }
       continue;
     }

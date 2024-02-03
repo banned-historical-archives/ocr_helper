@@ -299,6 +299,23 @@ export type OCRParameterAdvanced = {
   vsplit: number; // 如果设置为0.5，ocr结果将从页面宽度的50%处分割，如果为0表示不分割。当auto_vsplit为false且vsplit不为0时，表示任何页面都进行分割。
 };
 
+export type Music = {
+  id: string;
+  name: string;
+  composer: string;
+  description: string;
+  lyrics: {
+    lyricist: string;
+    version: string;
+    content: string;
+    audios: {
+      url: string;
+      source: string;
+      artist: string;
+    }[];
+  }[];
+}
+
 export type CommonResource = {
   resource_type: 'book' | 'music' | 'picture' | 'video',
   entity: {
@@ -306,6 +323,7 @@ export type CommonResource = {
     name: string,
     type: 'img' | 'pdf' | 'epub' | 'db',
   };
+  metadata?: Music;
   path: string; // 相对子仓库路径
   parser_option: ParserOption;
   parser_id: string;
