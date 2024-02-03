@@ -322,8 +322,7 @@ export type CommonResource = {
     id: string,
     name: string,
     type: 'img' | 'pdf' | 'epub' | 'db',
-  };
-  metadata?: Music;
+  } | Music;
   path: string; // 相对子仓库路径
   parser_option: ParserOption;
   parser_id: string;
