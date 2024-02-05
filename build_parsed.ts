@@ -242,99 +242,92 @@ export function apply_patch(parserResult: ParserResult, patch: Patch) {
   )).map(i => i.default);
 
   for (const cfg of cfgs) {
-    if (
-      !!cfg.resource_type &&
-      cfg.resource_type != 'book'
-    ) {
-      const id = cfg.entity.id;
-      await fs.ensureDir(join(parsed_dir, id.slice(0, 3), id));
-      if (cfg.resource_type == 'music') {
-        await fs.writeFileSync(join(parsed_dir, id.slice(0, 3), id, id + '.musicinfo'), JSON.stringify(cfg.entity));
-      } else if (cfg.resource_type == 'picture') {
-        await fs.writeFileSync(join(parsed_dir, id.slice(0, 3), id, id + '.pictureinfo'), JSON.stringify(cfg.entity));
-      } else if (cfg.resource_type == 'video') {
-        await fs.writeFileSync(join(parsed_dir, id.slice(0, 3), id, id + '.videoinfo'), JSON.stringify(cfg.entity));
-      }
-      continue;
-    }
-    const book_id = cfg.entity.id;
-    console.log('book id', book_id);
-    const ocr_cache_path = join(ocr_cache_dir, book_id);
+    const id = cfg.entity.id;
+    await fs.ensureDir(join(parsed_dir, id.slice(0, 3), id));
+    await fs.writeFile(join(parsed_dir, id.slice(0, 3), id, `${id}.metadata`), JSON.stringify(
+      cfg.entity
+    ));
 
-    let res: ParserResult[] = [];
-    if (cfg.parser_id === 'automation') {
-      res = await automationParser(ocr_cache_path, cfg.parser_option);
-    } else if (cfg.parser_id === 'result-json') {
-      for (const f of await fs.readdir(join(raw_dir, cfg.path))) {
-        res.push(...await resultJson(join(raw_dir, cfg.path, f)));
-      }
-    } else if (cfg.parser_id === 'CCRD') {
-      res = await CCRD(join(raw_dir, cfg.path));
-    } else if (cfg.parser_id === 'chuanxinlu') {
-      res = await chuanxinlu(join(raw_dir, cfg.path), cfg.parser_option);
-    } else if (cfg.parser_id === 'jimi') {
-      res = await jimi(join(raw_dir, cfg.path));
-    } else if (cfg.parser_id === 'jinghuo') {
-      res = await jinghuo(join(raw_dir, cfg.path), cfg.parser_option);
-    } else if (cfg.parser_id === 'jqjianghua') {
-      res = await jqjianghua(join(raw_dir, cfg.path), cfg.parser_option);
-    } else if (cfg.parser_id === 'qibenyu') {
-      res = await qibenyu(join(raw_dir, cfg.path));
-    } else if (cfg.parser_id === 'rmrb') {
-      res = await rmrb(join(raw_dir, cfg.path));
-    } else if (cfg.parser_id === 'wanghongwen') {
-      res = await wanghongwen(join(raw_dir, cfg.path), cfg.parser_option);
-    } else if (cfg.parser_id === 'wengeqianqixinianlu1') {
-      res = await wengeqianqixinianlu1(join(raw_dir, cfg.path), cfg.parser_option);
-    } else if (cfg.parser_id === 'wenji') {
-      res = await wenji(join(raw_dir, cfg.path), cfg.parser_option);
-    } else if (cfg.parser_id === 'wenku') {
-      res = await wenku(join(raw_dir, cfg.path));
-    } else if (cfg.parser_id === 'wenku') {
-      res = await wenku(join(raw_dir, cfg.path));
-    } else if (cfg.parser_id === 'xuanji') {
-      res = await xuanji(join(raw_dir, cfg.path), cfg.parser_option);
-    } else if (cfg.parser_id === 'yaowenyuan') {
-      res = await yaowenyuan(join(raw_dir, cfg.path), cfg.parser_option);
-    } else if (cfg.parser_id === 'zhangchunqiao') {
-      res = await zhangchunqiao(join(raw_dir, cfg.path), cfg.parser_option);
-    } else if (cfg.parser_id === 'zzj1') {
-      res = await zzj1(join(raw_dir, cfg.path), cfg.parser_option);
-    } else if (cfg.parser_id === 'maoistlegacy-txt') {
-      res = await maoistlegacyTxt(join(raw_dir, cfg.path, 'meta.json'));
-    }
-    for (let article of res) {
-      const article_id = get_article_id(article);
-      article.alias = traditionalChineseToSimpleChinese(article.alias || '');
-      article.description = traditionalChineseToSimpleChinese(article.description || '');
-      article.parts.forEach(j => {
-        j.text = traditionalChineseToSimpleChinese(j.text);
-      });
-      for (let j = 0; j < article.comments.length; ++j) {
-        article.comments[j] = traditionalChineseToSimpleChinese(
-          article.comments[j],
-        );
-      }
+    if (cfg.resource_type == 'music') {
+    } else if (cfg.resource_type == 'picture') {
+    } else if (cfg.resource_type == 'video') {
+    } else if (cfg.resource_type === 'book') {
+      const book_id = cfg.entity.id;
+      console.log('book id', book_id);
+      const ocr_cache_path = join(ocr_cache_dir, book_id);
 
-      const patch_path = join(ocr_patch_dir, `[${article_id}][${book_id}].ts`);
-      if (await fs.pathExists(patch_path)) {
-        console.log('found patch', patch_path);
-        const patch_list = (await import(patch_path)).default;
-        for (const patch of patch_list) {
-          if (patch.version === 2) {
-            article = apply_patch_v2(article, patch);
-          } else {
-            apply_patch(article, patch);
+      let res: ParserResult[] = [];
+      if (cfg.parser_id === 'automation') {
+        res = await automationParser(ocr_cache_path, cfg.parser_option);
+      } else if (cfg.parser_id === 'result-json') {
+        for (const f of await fs.readdir(join(raw_dir, cfg.path))) {
+          res.push(...await resultJson(join(raw_dir, cfg.path, f)));
+        }
+      } else if (cfg.parser_id === 'CCRD') {
+        res = await CCRD(join(raw_dir, cfg.path));
+      } else if (cfg.parser_id === 'chuanxinlu') {
+        res = await chuanxinlu(join(raw_dir, cfg.path), cfg.parser_option);
+      } else if (cfg.parser_id === 'jimi') {
+        res = await jimi(join(raw_dir, cfg.path));
+      } else if (cfg.parser_id === 'jinghuo') {
+        res = await jinghuo(join(raw_dir, cfg.path), cfg.parser_option);
+      } else if (cfg.parser_id === 'jqjianghua') {
+        res = await jqjianghua(join(raw_dir, cfg.path), cfg.parser_option);
+      } else if (cfg.parser_id === 'qibenyu') {
+        res = await qibenyu(join(raw_dir, cfg.path));
+      } else if (cfg.parser_id === 'rmrb') {
+        res = await rmrb(join(raw_dir, cfg.path));
+      } else if (cfg.parser_id === 'wanghongwen') {
+        res = await wanghongwen(join(raw_dir, cfg.path), cfg.parser_option);
+      } else if (cfg.parser_id === 'wengeqianqixinianlu1') {
+        res = await wengeqianqixinianlu1(join(raw_dir, cfg.path), cfg.parser_option);
+      } else if (cfg.parser_id === 'wenji') {
+        res = await wenji(join(raw_dir, cfg.path), cfg.parser_option);
+      } else if (cfg.parser_id === 'wenku') {
+        res = await wenku(join(raw_dir, cfg.path));
+      } else if (cfg.parser_id === 'wenku') {
+        res = await wenku(join(raw_dir, cfg.path));
+      } else if (cfg.parser_id === 'xuanji') {
+        res = await xuanji(join(raw_dir, cfg.path), cfg.parser_option);
+      } else if (cfg.parser_id === 'yaowenyuan') {
+        res = await yaowenyuan(join(raw_dir, cfg.path), cfg.parser_option);
+      } else if (cfg.parser_id === 'zhangchunqiao') {
+        res = await zhangchunqiao(join(raw_dir, cfg.path), cfg.parser_option);
+      } else if (cfg.parser_id === 'zzj1') {
+        res = await zzj1(join(raw_dir, cfg.path), cfg.parser_option);
+      } else if (cfg.parser_id === 'maoistlegacy-txt') {
+        res = await maoistlegacyTxt(join(raw_dir, cfg.path, 'meta.json'));
+      }
+      for (let article of res) {
+        const article_id = get_article_id(article);
+        article.alias = traditionalChineseToSimpleChinese(article.alias || '');
+        article.description = traditionalChineseToSimpleChinese(article.description || '');
+        article.parts.forEach(j => {
+          j.text = traditionalChineseToSimpleChinese(j.text);
+        });
+        for (let j = 0; j < article.comments.length; ++j) {
+          article.comments[j] = traditionalChineseToSimpleChinese(
+            article.comments[j],
+          );
+        }
+
+        const patch_path = join(ocr_patch_dir, `[${article_id}][${book_id}].ts`);
+        if (await fs.pathExists(patch_path)) {
+          console.log('found patch', patch_path);
+          const patch_list = (await import(patch_path)).default;
+          for (const patch of patch_list) {
+            if (patch.version === 2) {
+              article = apply_patch_v2(article, patch);
+            } else {
+              apply_patch(article, patch);
+            }
           }
         }
-      }
 
-      await fs.ensureDir(join(parsed_dir, book_id.slice(0, 3), book_id, article_id.slice(0, 3)));
-      await fs.writeFile(join(parsed_dir, book_id.slice(0, 3), book_id, article_id.slice(0, 3), `${article_id}.json`), JSON.stringify(article));
-      await fs.writeFile(join(parsed_dir, book_id.slice(0, 3), book_id, article_id.slice(0, 3), `${article_id}.tags`), JSON.stringify(get_tags(article)));
-      await fs.writeFile(join(parsed_dir, book_id.slice(0, 3), book_id, `${book_id}.bookinfo`), JSON.stringify(
-        cfg.entity
-      ));
+        await fs.ensureDir(join(parsed_dir, book_id.slice(0, 3), book_id, article_id.slice(0, 3)));
+        await fs.writeFile(join(parsed_dir, book_id.slice(0, 3), book_id, article_id.slice(0, 3), `${article_id}.json`), JSON.stringify(article));
+        await fs.writeFile(join(parsed_dir, book_id.slice(0, 3), book_id, article_id.slice(0, 3), `${article_id}.tags`), JSON.stringify(get_tags(article)));
+      }
     }
   }
 })();
