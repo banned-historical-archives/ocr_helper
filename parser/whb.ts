@@ -27,7 +27,7 @@ export default async function (
       res.push({
         title: json.ytitle + json.mtitle + json.ftitle ,
         authors: json.authors,
-        dates: json.dates,
+        dates: json.date,
         is_range_date: false,
         parts: json.text,
         comments: [],
