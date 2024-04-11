@@ -22,7 +22,7 @@ export default async function (
   for (let j of fs.readdirSync((`${root}`))) {
     for (let k of fs.readdirSync((`${root}/${j}`))) {
       const json = JSON.parse(
-        fs.readFileSync((`${root}/${j}/${k}.json`)).toString(),
+        fs.readFileSync((`${root}/${j}/${k}`)).toString(),
       );
       res.push({
         title: json.ytitle + json.mtitle + json.ftitle ,
