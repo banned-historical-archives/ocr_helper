@@ -18,6 +18,8 @@ import {
   CommonResource,
 } from './types';
 
+let timeout = process.env.CI ? Date.now() + 4 * 60 * 60 * 1000 : Infinity;
+
 let [_, __, ocr_config_dir, raw_dir, ocr_cache_dir] = process.argv;
 if (!path.isAbsolute(ocr_cache_dir)) {
   ocr_cache_dir = join(__dirname, ocr_cache_dir);
@@ -120,6 +122,12 @@ export async function do_ocr(
   for (const article of parser_opt.articles!) {
     const parts: PartRaw[] = [];
     for (let i = article.page_start; i <= article.page_end; ++i) {
+      
+      if (Date.now() > timeout) {
+        console.log('timeout');
+        return;
+      }
+      
       console.log(i + '/' + article.page_end);
       const merged_ocr_parameters: Partial<
         OCRParameter & OCRParameterAdvanced
@@ -169,6 +177,10 @@ export async function do_ocr(
 
     if (cfg.parser_id === 'automation') {
       const res = await do_ocr(join(raw_dir, cfg.path), cfg.parser_option, (cfg as any).entity.type, cfg.entity.id);
+    }
+    if (Date.now() > timeout) {
+      console.log('timeout');
+      return;
     }
   }
 })();
