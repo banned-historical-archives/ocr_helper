@@ -35,7 +35,10 @@ export default async function (
             const paragraphs: string[] = [];
             // 连续两个换行分割段落
             tmp.split(/\n\n[ \~]/).forEach(paragraph => {
-                paragraphs.push(paragraph.split('\n').map(x => x.replace(/^ *\~\{/, '').replace(/\~\}$/, '')).join(''));
+                const content = paragraph.split('\n').map(x => x.replace(/^ *\~\{/, '').replace(/\~\}$/, '')).join('').trim();
+                if (content) {
+                    paragraphs.push(content);
+                }
             });
             res.push({
                 title,
