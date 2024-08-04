@@ -6,7 +6,6 @@ import {
   ContentPart,
   ContentPartRaw,
   ContentType,
-  Date,
   OCRParameterLegacy,
   OCRParameterAdvanced,
   OCRResult,
