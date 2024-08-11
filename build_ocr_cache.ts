@@ -17,7 +17,7 @@ import {
   CommonResource,
 } from './types';
 
-let timeout = process.env.CI ? Date.now() + 4 * 60 * 60 * 1000 : Infinity;
+let timeout = process.env.CI ? Date.now() + 5 * 60 * 60 * 1000 : Infinity;
 
 let [_, __, ocr_config_dir, raw_dir, ocr_cache_dir] = process.argv;
 if (!path.isAbsolute(ocr_cache_dir)) {
