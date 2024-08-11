@@ -265,6 +265,8 @@ export function apply_patch(parserResult: ParserResult, patch: Patch) {
         for (const f of await fs.readdir(join(raw_dir, cfg.path))) {
           res.push(...await resultJson(join(raw_dir, cfg.path, f)));
         }
+      } else if (cfg.parser_id === 'result-json-v2') {
+        res = await resultJson(join(raw_dir, cfg.path));
       } else if (cfg.parser_id === 'CCRD') {
         res = await CCRD(join(raw_dir, cfg.path));
       } else if (cfg.parser_id === 'CND') {
