@@ -304,6 +304,7 @@ export type Music = {
   name: string;
   composer: string;
   description: string;
+  tags?: string[];
   lyrics: {
     lyricist: string;
     version: string;

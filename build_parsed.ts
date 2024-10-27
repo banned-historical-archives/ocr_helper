@@ -20,6 +20,7 @@ import {
   OCRCacheFile,
   Patch,
   PatchV2,
+  Music,
 } from './types';
 import { get_article_id, } from './utils';
 import { traditionalChineseToSimpleChinese } from './i18n';
@@ -237,6 +238,18 @@ export function apply_patch(parserResult: ParserResult, patch: Patch) {
   }
 }
 
+function get_music_tags(m: Music) {
+  const keys = ['毛主席', '邓小平', '革命'];
+  const tags: string[] = m.tags || [];
+  m.lyrics.forEach(i => {
+    keys.forEach(j => {
+      if (i.content.indexOf(j) >= 0) {
+        tags.push(j)
+      }
+    });
+  });
+  return Array.from(new Set(tags))
+}
 (async () => {
   const f_list = (await fs.readdir(config_dir)).filter(i => i.endsWith('.ts'))
   const cfgs = (await Promise.all<{default: CommonResource}>(
@@ -251,6 +264,12 @@ export function apply_patch(parserResult: ParserResult, patch: Patch) {
     ));
 
     if (cfg.resource_type == 'music') {
+    await fs.writeFile(join(parsed_dir, id.slice(0, 3), id, `${id}.metadata`), JSON.stringify(
+      {
+        ...cfg.entity,
+        tags: get_music_tags(cfg.entity as Music),
+      }
+    ));
     } else if (cfg.resource_type == 'picture') {
     } else if (cfg.resource_type == 'video') {
     } else if (cfg.resource_type === 'book') {
