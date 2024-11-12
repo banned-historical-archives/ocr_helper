@@ -44,6 +44,7 @@ import zzj1 from './parser/zzj1';
 import resultJson from './parser/result-json';
 import maoistlegacyTxt from './parser/maoistlegacy-txt';
 import whb from './parser/whb';
+import jfjb from './parser/jfjb';
 import CND from './parser/CND';
 
 const [_, __, config_dir, ocr_cache_dir, ocr_patch_dir, parsed_dir, raw_dir] = process.argv;
@@ -290,6 +291,8 @@ function get_music_tags(m: Music) {
         res = await CCRD(join(raw_dir, cfg.path));
       } else if (cfg.parser_id === 'CND') {
         res = await CND(join(raw_dir));
+      } else if (cfg.parser_id === 'jfjb') {
+        res = await jfjb(join(raw_dir, cfg.path));
       } else if (cfg.parser_id === 'whb') {
         res = await whb(join(raw_dir, cfg.path));
       } else if (cfg.parser_id === 'chuanxinlu') {
