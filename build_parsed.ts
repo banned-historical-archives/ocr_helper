@@ -46,6 +46,7 @@ import maoistlegacyTxt from './parser/maoistlegacy-txt';
 import whb from './parser/whb';
 import jfjb from './parser/jfjb';
 import CND from './parser/CND';
+import aisixiang from './parser/aisixiang';
 
 const [_, __, config_dir, ocr_cache_dir, ocr_patch_dir, parsed_dir, raw_dir] = process.argv;
 
@@ -315,8 +316,8 @@ function get_music_tags(m: Music) {
         res = await wenji(join(raw_dir, cfg.path), cfg.parser_option);
       } else if (cfg.parser_id === 'wenku') {
         res = await wenku(join(raw_dir, cfg.path));
-      } else if (cfg.parser_id === 'wenku') {
-        res = await wenku(join(raw_dir, cfg.path));
+      } else if (cfg.parser_id === 'aisixiang') {
+        res = await aisixiang(join(raw_dir, cfg.path));
       } else if (cfg.parser_id === 'xuanji') {
         res = await xuanji(join(raw_dir, cfg.path), cfg.parser_option);
       } else if (cfg.parser_id === 'yaowenyuan') {
