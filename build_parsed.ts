@@ -240,7 +240,7 @@ export function apply_patch(parserResult: ParserResult, patch: Patch) {
 }
 
 function get_music_tags(m: Music) {
-  const keys = ['毛主席', '邓小平', '革命', '反修', '文化大革命'];
+  const keys = ['毛主席', '邓小平', '革命', '反修', '文化大革命', '批邓', '刘少奇', '翻案', '林彪', '反击右倾'];
   const tags: string[] = m.tags || [];
   m.lyrics.forEach(i => {
     keys.forEach(j => {
