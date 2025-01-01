@@ -26,6 +26,7 @@ export default async function (
   const res: ParserResult[] = [];
   const root = path;
   for (let html of fs.readdirSync((`${root}`))) {
+    console.log(html)
     const dom = new JSDOM(fs.readFileSync((`${root}/${html}`)).toString());
     const doc = dom.window.document as any;
     const title = doc.querySelector('.show_text h3').textContent.trim();
